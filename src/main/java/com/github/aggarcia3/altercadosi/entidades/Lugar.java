@@ -1,8 +1,7 @@
 package com.github.aggarcia3.altercadosi.entidades;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,11 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -30,39 +27,23 @@ import lombok.NonNull;
 @Entity
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public final class Altercado {
+@Table(uniqueConstraints = @UniqueConstraint(
+	columnNames = { "codigoPostal", "localidad", "comunidadAutonoma" }
+))
+public final class Lugar {
 	@Id @EqualsAndHashCode.Exclude
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	@Column(unique = true)
-	@NonNull @NotNull
-	@NotBlank
-	@Max(128)
-	private String nombre = null;
-
-	@NonNull @NotNull
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date fecha = new Date();
-
 	@Column(nullable = false)
-	@Min(1)
-	private int numInvolucrados = 1;
-
+	@Min(1000) @Max(52000)
+	private int codigoPostal;
+	@Column(nullable = false, length = 128)
 	@NonNull @NotNull
 	@NotBlank
-	@Size(min = 32, max = 2048)
-	private String descripcion = null;
+	@Size(min = 1, max = 128)
+	private String localidad;
 
-	@ManyToOne(optional = false)
+	@OneToMany(mappedBy = "lugar", cascade = CascadeType.ALL)
 	@NonNull @NotNull
-	private Lugar lugar = null;
-
-	@OneToMany(mappedBy = "altercado", cascade = CascadeType.ALL)
-	@NonNull @NotNull
-	private final Collection<Victima> victimas = new ArrayList<>(); 
-
-	@OneToOne(optional = false)
-	@NonNull @NotNull
-	private Arma arma = null;
+	private final Set<Altercado> altercadosOcurridos = new HashSet<>();
 }
