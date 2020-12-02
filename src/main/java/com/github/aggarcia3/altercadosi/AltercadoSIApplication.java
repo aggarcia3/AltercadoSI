@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AltercadosiApplication {
+public class AltercadoSIApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(AltercadosiApplication.class, args);
+		SpringApplication.run(AltercadoSIApplication.class, args);
 	}
 }
