@@ -2,6 +2,7 @@ package com.github.aggarcia3.altercadosi.entidades;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,23 +31,23 @@ public final class Victima {
 
 	@Temporal(TemporalType.DATE)
 	@NonNull @NotNull
-	private Date fechaNacimiento = null;
+	private Date fechaNacimiento;
 
 	@Enumerated(EnumType.STRING)
 	@NonNull @NotNull
-	private Genero genero = null;
+	private Genero genero;
 
 	@Enumerated(EnumType.STRING)
 	@NonNull @NotNull
-	private Raza raza = null;
+	private Raza raza;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, cascade = CascadeType.ALL)
 	@NonNull @NotNull
-	private Altercado altercado = null;
+	private Altercado altercado;
 
 	public static enum Genero {
-		MASCULINO,
-		FEMENINO,
+		HOMBRE,
+		MUJER,
 		OTRO
 	}
 

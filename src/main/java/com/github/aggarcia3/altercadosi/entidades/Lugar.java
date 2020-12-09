@@ -34,9 +34,11 @@ public final class Lugar {
 	@Id @EqualsAndHashCode.Exclude
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+
 	@Column(nullable = false)
 	@Min(1000) @Max(52000)
 	private int codigoPostal;
+
 	@Column(nullable = false, length = 128)
 	@NonNull @NotNull
 	@NotBlank

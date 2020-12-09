@@ -1,6 +1,7 @@
 package com.github.aggarcia3.altercadosi.entidades;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -16,10 +17,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Positive;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -39,30 +39,42 @@ public final class Altercado {
 	@NonNull @NotNull
 	@NotBlank
 	@Max(128)
-	private String nombre = null;
+	private String nombre;
 
 	@NonNull @NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fecha = new Date();
 
 	@Column(nullable = false)
-	@Min(1)
-	private int numInvolucrados = 1;
+	@Positive
+	private int numInvolucrados;
 
 	@NonNull @NotNull
 	@NotBlank
-	@Size(min = 32, max = 2048)
-	private String descripcion = null;
+	@Max(2048)
+	private String descripcion;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, cascade = CascadeType.ALL)
 	@NonNull @NotNull
-	private Lugar lugar = null;
+	private Lugar lugar;
 
 	@OneToMany(mappedBy = "altercado", cascade = CascadeType.ALL)
 	@NonNull @NotNull
 	private final Collection<Victima> victimas = new ArrayList<>(); 
 
-	@OneToOne(optional = false)
+	@OneToOne(optional = false, cascade = CascadeType.ALL)
 	@NonNull @NotNull
-	private Arma arma = null;
+	private Arma arma;
+
+	public void addVictimas(@NonNull Collection<Victima> victimas) {
+		for (Victima v : victimas) {
+			if (v != null) {
+				this.victimas.add(v);
+			}
+		}
+	}
+
+	public void addVictimas(@NonNull Victima... victimas) {
+		addVictimas(Arrays.asList(victimas));
+	}
 }
