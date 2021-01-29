@@ -31,7 +31,7 @@ public class ConversorArma implements Converter<Integer, Arma> {
 		if (arma.isPresent()) {
 			return arma.get();
 		} else {
-			throw new IllegalArgumentException("No existe un arma registrada con ese código de prueba");
+			throw new IllegalArgumentException("No existe un arma con ese código de prueba");
 		}
 	}
 }
