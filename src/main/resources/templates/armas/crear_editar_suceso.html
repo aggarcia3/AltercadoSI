@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(${(creando ? 'Registrar' : 'Editar') + ' suceso de arma'}, ~{::body/content()}, 'armas')" xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<h1 class="p-3 m-0" th:text="${(creando ? 'Registrar' : 'Editar') + ' suceso de arma'}">Registrar/editar suceso de arma</h1>
+		<form th:object="${sucesoArma}" method="post" th:action="${creando} ? @{/armas/sucesos/crear} : @{/armas/sucesos/__${sucesoArma.id}__/editar}">
+			<div class="form-group row m-3">
+				<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="nombre" th:name="nombre" minlength="1" maxlength="128" pattern=".*\S.*" required
+					title="El nombre no debe contener solamente espacios en blanco y debe de tener 128 caracteres o menos"
+					aria-describedby="descripcionNombre" th:value="${creando} ? '' : *{nombre}">
+				</div>
+				<small id="descripcionNombre" class="form-text text-light">Introduce el nombre del suceso.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="descripcion" class="col-sm-2 col-form-label">Descripción</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" id="descripcion" th:name="descripcion" minlength="1" maxlength="8192" required
+					rows="7" aria-describedby="descripcionDescripcion" th:text="${creando} ? '' : *{descripcion}"></textarea>
+				</div>
+				<small id="descripcionDescripcion" class="form-text text-light">Introduce la descripción del suceso.</small>
+			</div>
+
+			<!-- Enhorabuena, has encontrado la funcionalidad oculta de transferir sucesos entre armas registradas ;) -->
+			<!-- Este hidden podría quitarse con un DTO + lógica para combinar DTO con la entidad real a persistir, -->
+			<!-- pero no quiero casi duplicar una clase ni complicar la lógica -->
+			<input type="hidden" th:name="armaRegistrada" th:value="*{armaRegistrada.codigoPrueba}">
+
+			<div class="form-group">
+				<ul class="lista-acciones p-0 m-0" role="presentation">
+					<li><button class="btn btn-lg btn-primary m-3" th:text="${creando} ? 'Registrar' : 'Guardar'" type="submit">Registrar/guardar</button>
+					<li><a class="btn btn-lg btn-secondary text-white m-3" href="#"
+						th:href="@{/armas/__*{armaRegistrada.codigoPrueba}__/editar}">Volver</a>
+				</ul>
+			</div>
+		</form>
+	</body>
+</html>

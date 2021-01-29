@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'error')" xmlns:th="http://www.thymeleaf.org">
+	<title>Problema cazado</title>
+	<body>
+		<h1 class="p-3 m-0">¡&#x1f41b;!</h1>
+
+		<p class="p-0 m-0"><strong>URL</strong>:</p>
+		<pre th:text="${path}">-</pre>
+
+		<p class="p-0 m-0"><strong>Error</strong>:</p>
+		<pre th:text="${error}">-</pre>
+
+		<p class="p-0 m-0"><strong>Mensaje</strong>:</p>
+		<pre th:text="${message}">-</pre>
+
+		<a class="btn btn-lg btn-secondary fw-bold border-white bg-white m-3" href="#"
+			th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/} : ${#request.getHeader('Referer')}">Volver</a>
+	</body>
+</html>

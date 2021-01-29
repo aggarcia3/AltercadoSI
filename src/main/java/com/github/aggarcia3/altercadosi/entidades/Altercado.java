@@ -1,48 +1,48 @@
 package com.github.aggarcia3.altercadosi.entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
-import lombok.AccessLevel;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Entity
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public final class Altercado {
-	@Id @EqualsAndHashCode.Exclude
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+@NoArgsConstructor
+@AllArgsConstructor
+public final class Altercado implements Serializable {
+	private static final long serialVersionUID = -1030103623631322395L;
 
-	@Column(unique = true)
+	@Id
 	@NonNull @NotNull
 	@NotBlank
-	@Max(128)
-	private String nombre;
+	@Size(max = 128)
+	private String nombre = "N/D";
 
 	@NonNull @NotNull
 	@Temporal(TemporalType.TIMESTAMP)
+	@PastOrPresent
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fecha = new Date();
 
 	@Column(nullable = false)
@@ -50,31 +50,18 @@ public final class Altercado {
 	private int numInvolucrados;
 
 	@NonNull @NotNull
-	@NotBlank
-	@Max(2048)
-	private String descripcion;
+	@Size(max = 8192)
+	private String descripcion = "N/D";
 
-	@ManyToOne(optional = false, cascade = CascadeType.ALL)
+	@ManyToOne(optional = false)
 	@NonNull @NotNull
-	private Lugar lugar;
+	private Lugar lugar = new Lugar();
 
 	@OneToMany(mappedBy = "altercado", cascade = CascadeType.ALL)
 	@NonNull @NotNull
 	private final Collection<Victima> victimas = new ArrayList<>(); 
 
-	@OneToOne(optional = false, cascade = CascadeType.ALL)
+	@ManyToOne(optional = false)
 	@NonNull @NotNull
-	private Arma arma;
-
-	public void addVictimas(@NonNull Collection<Victima> victimas) {
-		for (Victima v : victimas) {
-			if (v != null) {
-				this.victimas.add(v);
-			}
-		}
-	}
-
-	public void addVictimas(@NonNull Victima... victimas) {
-		addVictimas(Arrays.asList(victimas));
-	}
+	private Arma arma = new Arma();
 }

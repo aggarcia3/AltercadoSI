@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(${(creando ? 'Registrar' : 'Editar') + ' lugar'}, ~{::body/content()}, 'lugares')" xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<h1 class="p-3 m-0" th:text="${(creando ? 'Registrar' : 'Editar') + ' lugar'}">Registrar/editar lugar</h1>
+		<form th:object="${lugar}" method="post">
+			<div class="form-group row m-3">
+				<label for="codigoPostal" class="col-sm-2 col-form-label">Código postal</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="codigoPostal" th:name="codigoPostal" pattern="[1-9][0-9]{3}|[1-4][0-9]{4}|52[0-9]{3}" required
+					title="El código postal debe ser español, estando comprendido entre 1000 y 52000"
+					aria-describedby="descripcionCodigoPostal" th:value="${creando} ? '' : *{codigoPostal}">
+				</div>
+				<small id="descripcionCodigoPostal" class="form-text text-light">Introduce el código postal del lugar.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="localidad" class="col-sm-2 col-form-label">Localidad</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="localidad" th:name="localidad" minlength="1" maxlength="128" pattern=".*\S.*" required
+					title="La localidad no debe contener solamente espacios en blanco y debe de tener 128 caracteres o menos"
+					aria-describedby="descripcionLocalidad" th:value="${creando} ? '' : *{localidad}">
+				</div>
+				<small id="descripcionLocalidad" class="form-text text-light">Introduce la localidad del lugar.</small>
+			</div>
+
+			<th:block th:if="${!creando}">
+				<th:block th:replace="fragmentos/tabla_altercados :: componente_altercados(${lugar}, 'conLugar', ${lugar.id})"></th:block>
+			</th:block>
+
+			<div class="form-group">
+				<ul class="lista-acciones p-0 m-0" role="presentation">
+					<li><button class="btn btn-lg btn-primary m-3" th:text="${creando} ? 'Registrar' : 'Guardar'" type="submit">Registrar/guardar</button>
+					<li><a class="btn btn-lg btn-secondary text-white m-3" href="#"
+						th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/lugares} : ${#request.getHeader('Referer')}">Volver</a>
+				</ul>
+			</div>
+		</form>
+	</body>
+</html>

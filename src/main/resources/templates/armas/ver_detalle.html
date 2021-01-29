@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'armas')" xmlns:th="http://www.thymeleaf.org">
+	<title>Arma</title>
+	<body>
+		<h1 class="p-3 m-0">Información detallada del arma</h1>
+
+		<p class="p-0 m-0"><strong>Nombre</strong>:</p>
+		<p th:text="${arma.nombre}">-</p>
+
+		<p class="p-0 m-0"><strong>Código de prueba</strong>:</p>
+		<p th:text="${#numbers.formatInteger(arma.codigoPrueba, 9)}">-</p>
+
+		<p class="p-0 m-0"><strong>Número de serie</strong>:</p>
+		<th:block th:switch="${arma instanceof T(com.github.aggarcia3.altercadosi.entidades.ArmaRegistrada)}">
+			<p th:case="${true}" th:text="${arma.numSerie}">-</p>
+			<p th:case="*">&ndash;</p>
+		</th:block>
+
+		<p class="p-0 m-0"><strong>Número de licencia</strong>:</p>
+		<th:block th:switch="${arma instanceof T(com.github.aggarcia3.altercadosi.entidades.ArmaRegistrada)}">
+			<p th:case="${true}" th:text="${arma.numLicencia}">-</p>
+			<p th:case="*">&ndash;</p>
+		</th:block>
+
+		<p class="p-0 m-0"><strong>Fecha de expiración de la revista</strong>:</p>
+		<th:block th:switch="${arma instanceof T(com.github.aggarcia3.altercadosi.entidades.ArmaRegistrada)}">
+			<p th:case="${true}" th:text="${#dates.format(arma.fechaExpiracionRevista, 'EEEE, d ''de'' MMMM ''de'' yyyy')}">-</p>
+			<p th:case="*">&ndash;</p>
+		</th:block>
+
+		<p class="p-0 m-0"><strong>Coste estimado</strong>:</p>
+		<p th:text="${#numbers.formatCurrency(arma.costeEstimado)}">-</p>
+
+		<p class="p-0 m-0"><strong>Altercados asociados</strong>:</p>
+		<th:block th:switch="${#lists.isEmpty(arma.altercados)}">
+			<p th:case="${true}">Este arma no ha sido usada en ningún altercado.</p>
+			<table th:case="*" class="table table-dark table-striped table-bordered table-hover">
+				<th:block th:replace="fragmentos/tabla_altercados :: componente_altercados_interior_tabla(${arma.altercados}, false)"></th:block>
+			</table>
+		</th:block>
+
+		<p class="p-0 m-0"><strong>Sucesos asociados</strong>:</p>
+		<th:block th:switch="${arma instanceof T(com.github.aggarcia3.altercadosi.entidades.ArmaRegistrada) and !#lists.isEmpty(arma.sucesos)}">
+			<p th:case="${false}">Este arma no ha protagonizado ningún suceso.</p>
+			<table th:case="*" class="table table-dark table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="suceso : ${arma.sucesos}">
+						<td th:text="${suceso.nombre}">Nombre del suceso</td>
+						<td>
+							<ul class="lista-acciones p-0 m-0" role="presentation">
+								<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/armas/sucesos/__${suceso.id}__}"><i class="fas fa-eye"></i></a>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</th:block>
+
+		<a class="btn btn-lg btn-secondary text-white m-3" href="#"
+			th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/armas} : ${#request.getHeader('Referer')}">Volver</a>
+	</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(${(creando ? 'Registrar' : 'Editar') + ' altercado'}, ~{::body/content()}, 'altercados')" xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<h1 class="p-3 m-0" th:text="${(creando ? 'Registrar' : 'Editar') + ' altercado'}">Registrar/editar altercado</h1>
+		<form th:object="${altercado}" method="post" th:action="@{/altercados/crear}">
+			<div class="form-group row m-3">
+				<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="nombre" th:name="nombre" minlength="1" maxlength="128" pattern=".*\S.*" required
+						title="El nombre no puede contener solamente espacios en blanco y debe tener 128 caracteres o menos"
+						aria-describedby="descripcionNombre" th:value="${creando} ? '' : *{nombre}">
+				</div>
+				<small id="descripcionNombre" class="form-text text-light">Introduce el nombre del altercado.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="fecha" th:name="fecha" type="date"
+						th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required
+						aria-describedby="descripcionFecha" th:value="${creando} ? '' : ${#dates.format(altercado.fecha, 'yyyy-MM-dd')}">
+				</div>
+				<small id="descripcionFecha" class="form-text text-light">Introduce la fecha del altercado.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="numInvolucrados" class="col-sm-2 col-form-label">Número de involucrados</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="numInvolucrados" th:name="numInvolucrados" type="number" min="0" max="2147483647" required
+					title="El número de involucrados debe de ser mayor o igual que cero"
+					aria-describedby="descripcionNumInvolucrados" th:value="${creando} ? '' : *{numInvolucrados}">
+				</div>
+				<small id="descripcionNumInvolucrados" class="form-text text-light">Introduce el número de involucrados en el altercado, excluyendo víctimas.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="descripcion" class="col-sm-2 col-form-label">Descripción</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" id="descripcion" th:name="descripcion" minlength="1" maxlength="8192" required
+					rows="7" aria-describedby="descripcionDescripcion" th:text="${creando} ? '' : *{descripcion}"></textarea>
+				</div>
+				<small id="descripcionDescripcion" class="form-text text-light">Introduce la descripción del altercado.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="lugar" class="col-sm-2 col-form-label">Lugar</label>
+				<div class="col-sm-10">
+					<select class="form-select" id="lugar" th:name="lugar" required aria-describedby="descripcionLugar">
+						<option disabled th:selected="*{lugar.id} == 0">&ndash;</option>
+						<optgroup label="Lugares sin altercados">
+							<option th:each="lugar : ${lugaresSinAltercados}"
+								th:selected="*{lugar.id} == ${lugar.id}" th:value="${lugar.id}"
+								th:text="|${lugar.localidad}, ${lugar.codigoPostal}|"></option>
+						</optgroup>
+						<optgroup label="Lugares con altercados">
+							<option th:each="lugar : ${lugaresConAltercados}"
+								th:selected="*{lugar.id} == ${lugar.id}" th:value="${lugar.id}"
+								th:text="|${lugar.localidad}, ${lugar.codigoPostal}|"></option>
+						</optgroup>
+					</select>
+				</div>
+				<small id="descripcionLugar" class="form-text text-light">Escoge el lugar en el que ha ocurrido el altercado.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="arma" class="col-sm-2 col-form-label">Arma</label>
+				<div class="col-sm-10">
+					<select class="form-select" id="arma" th:name="arma" required aria-describedby="descripcionArma">
+						<option disabled th:selected="*{arma.codigoPrueba} == 0">&ndash;</option>
+						<optgroup label="Armas sin altercados">
+							<option th:each="arma : ${armasSinAltercados}"
+								th:selected="*{arma.codigoPrueba} == ${arma.codigoPrueba}" th:value="${arma.codigoPrueba}"
+								th:text="|${arma.nombre}, ${#numbers.formatInteger(arma.codigoPrueba, 9)}|"></option>
+						</optgroup>
+						<optgroup label="Armas con altercados">
+							<option th:each="arma : ${armasConAltercados}"
+								th:selected="*{arma.codigoPrueba} == ${arma.codigoPrueba}" th:value="${arma.codigoPrueba}"
+								th:text="|${arma.nombre}, ${#numbers.formatInteger(arma.codigoPrueba, 9)}|"></option>
+						</optgroup>
+					</select>
+				</div>
+				<small id="descripcionArma" class="form-text text-light">Escoge el arma utilizada por el autor del altercado.</small>
+			</div>
+
+			<div class="form-group" th:if="${!creando}">
+				<ul class="lista-acciones p-0 m-0" role="presentation">
+					<li><a class="btn btn-sm btn-primary m-3" href="#"
+						th:href="@{/lugares/__${altercado.lugar.id}__/editar}">Editar lugar actualmente asociado</a>
+					<li><a class="btn btn-sm btn-primary m-3" href="#"
+						th:href="@{/armas/__${altercado.arma.codigoPrueba}__/editar}">Editar arma actualmente asociada</a>
+				</ul>
+			</div>
+
+			<div class="form-group">
+				<ul class="lista-acciones p-0 m-0" role="presentation">
+					<li><button class="btn btn-lg btn-primary m-3" th:text="${creando} ? 'Registrar' : 'Guardar'" type="submit">Registrar/guardar</button>
+					<li><a class="btn btn-lg btn-secondary text-white m-3" href="#"
+						th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/altercados} : ${#request.getHeader('Referer')}">Volver</a>
+				</ul>
+			</div>
+		</form>	
+	</body>
+</html>

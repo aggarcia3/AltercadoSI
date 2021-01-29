@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'lugares')" xmlns:th="http://www.thymeleaf.org">
+	<title>Lugares</title>
+	<body>
+		<h1 class="p-3 m-0">Lugares</h1>
+		<th:block th:switch="${#lists.isEmpty(lugares)}">
+			<p th:case="${true}">No hay lugares en el sistema. ¡Prueba a registrar uno nuevo!</p>
+			<table th:case="*" class="table table-sm table-dark table-striped table-bordered table-hover" data-toggle="table" data-pagination="true"
+			data-search="true" data-search-accent-neutralise="true" data-search-highlight="true" data-search-on-enter-key="true" data-show-search-button="true"
+			data-maintain-meta-data="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn btn-secondary text-light">
+				<thead>
+					<tr>
+						<th>Código postal</th>
+						<th>Localidad</th>
+						<th>Número de altercados asociados</th>
+						<th data-force-hide="true">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="lugar : ${lugares}">
+						<td th:text="${lugar.codigoPostal}">00000</td>
+						<td th:text="${lugar.localidad}">Ourense</td>
+						<td th:text="${#lists.size(lugar.altercados)}">42</td>
+						<td>
+							<ul class="lista-acciones p-0 m-0" role="presentation">
+								<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/lugares/__${lugar.id}__}"><i class="fas fa-eye"></i></a>
+								<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/lugares/__${lugar.id}__/editar}"><i class="fas fa-pencil-alt"></i></a>
+								<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/lugares/__${lugar.id}__/eliminar}"><i class="fas fa-trash-alt"></i></a>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</th:block>
+
+		<a class="btn btn-primary m-3" role="button" th:href="@{/lugares/crear}">Registrar</a>
+	</body>
+</html>

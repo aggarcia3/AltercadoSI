@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'altercados')" xmlns:th="http://www.thymeleaf.org">
+	<title>Altercado</title>
+	<body>
+		<h1 class="p-3 m-0">Información detallada del altercado</h1>
+
+		<p class="p-0 m-0"><strong>Nombre</strong>:</p>
+		<p th:text="${altercado.nombre}">-</p>
+
+		<p class="p-0 m-0"><strong>Fecha</strong>:</p>
+		<p th:text="${#dates.format(altercado.fecha, 'EEEE, d ''de'' MMMM ''de'' yyyy')}">-</p>
+
+		<p class="p-0 m-0"><strong>Número de involucrados</strong>:</p>
+		<p th:text="${altercado.numInvolucrados}">-</p>
+
+		<p class="p-0 m-0"><strong>Descripción</strong>:</p>
+		<p class="conservarEspaciosOrigen" th:text="${altercado.descripcion}">-</p>
+
+		<p class="p-0 m-0"><strong>Lugar</strong>:</p>
+		<p class="m-0" th:text="|${altercado.lugar.localidad}, ${altercado.lugar.codigoPostal}|">-</p>
+		<div>
+			<a class="btn btn-primary btn-sm m-3" role="button" th:href="@{/lugares/__${altercado.lugar.id}__}">Ver más del lugar</a>
+		</div>
+
+		<p class="p-0 m-0"><strong>Arma</strong>:</p>
+		<p class="m-0" th:text="|${altercado.arma.nombre}, ${#numbers.formatInteger(altercado.arma.codigoPrueba, 9)}|">-</p>
+		<div>
+			<a class="btn btn-primary btn-sm m-3" role="button" th:href="@{/armas/__${altercado.arma.codigoPrueba}__}">Ver más del arma</a>
+		</div>
+
+		<a class="btn btn-lg btn-secondary text-white m-3" href="#"
+			th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/altercados} : ${#request.getHeader('Referer')}">Volver</a>
+	</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'victimas')" xmlns:th="http://www.thymeleaf.org">
+	<title>Víctimas</title>
+	<body>
+		<h1 class="p-3 m-0">Víctimas</h1>
+		<th:block th:switch="${#lists.isEmpty(victimas)}">
+			<p th:case="${true}">No hay víctimas en el sistema. ¡Prueba a registrar una nueva!</p>
+			<table th:case="*" class="table table-sm table-dark table-striped table-bordered table-hover" data-toggle="table" data-pagination="true"
+				data-search="true" data-search-accent-neutralise="true" data-search-highlight="true" data-search-on-enter-key="true" data-show-search-button="true"
+				data-maintain-meta-data="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn btn-secondary text-light">
+				<thead>
+					<tr>
+						<th>Nombre completo</th>
+						<th>Fecha de nacimiento</th>
+						<th>Género</th>
+						<th>Raza</th>
+						<th>Nombre del altercado</th>
+						<th data-force-hide="true">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="victima : ${victimas}">
+						<td th:text="${victima.nombreCompleto}">Alejandro González</td>
+						<td th:text="${#dates.format(victima.fechaNacimiento, 'EEEE, d ''de'' MMMM ''de'' yyyy')}">22/12/1998</td>
+						<td th:text="${#strings.capitalize(#strings.toLowerCase(victima.genero))}">Hombre</td>
+						<td th:text="${#strings.capitalize(#strings.toLowerCase(victima.raza))}">Blanco</td>
+						<td th:text="${victima.altercado.nombre}">Disturbios de Los Ángeles de 1992</td>
+						<td>
+							<ul class="lista-acciones p-0 m-0" role="presentation">
+								<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/victimas/__${victima.nombreCompleto}__}"><i class="fas fa-eye"></i></a>
+								<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/victimas/__${victima.nombreCompleto}__/editar}"><i class="fas fa-pencil-alt"></i></a>
+								<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/victimas/__${victima.nombreCompleto}__/eliminar}"><i class="fas fa-trash-alt"></i></a>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</th:block>
+
+		<a class="btn btn-primary m-3" role="button" th:href="@{/victimas/crear}">Registrar</a>
+	</body>
+</html>

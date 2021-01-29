@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'armas')" xmlns:th="http://www.thymeleaf.org">
+	<title>Suceso de arma</title>
+	<body>
+		<h1 class="p-3 m-0">Información detallada del suceso de arma</h1>
+
+		<p class="p-0 m-0"><strong>Nombre</strong>:</p>
+		<p th:text="${sucesoArma.nombre}">-</p>
+
+		<p class="p-0 m-0"><strong>Descripción</strong>:</p>
+		<p class="conservarEspaciosOrigen" th:text="${sucesoArma.descripcion}">-</p>
+
+		<a class="btn btn-lg btn-secondary text-white m-3" href="#"
+			th:href="@{/armas/__${sucesoArma.armaRegistrada.codigoPrueba}__}">Volver</a>
+	</body>
+</html>

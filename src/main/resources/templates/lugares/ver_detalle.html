@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'lugares')" xmlns:th="http://www.thymeleaf.org">
+	<title>Lugar</title>
+	<body>
+		<h1 class="p-3 m-0">Información detallada del lugar</h1>
+
+		<p class="p-0 m-0"><strong>Código postal</strong>:</p>
+		<p th:text="${lugar.codigoPostal}">-</p>
+
+		<p class="p-0 m-0"><strong>Localidad</strong>:</p>
+		<p th:text="${lugar.localidad}">-</p>
+
+		<p class="p-0 m-0"><strong>Altercados ocurridos</strong>:</p>
+		<th:block th:switch="${#lists.isEmpty(lugar.altercados)}">
+			<p th:case="${true}">No ocurrieron altercados en este lugar.</p>
+			<table th:case="*" class="table table-dark table-striped table-bordered table-hover">
+				<th:block th:replace="fragmentos/tabla_altercados :: componente_altercados_interior_tabla(${lugar.altercados}, false)"></th:block>
+			</table>
+		</th:block>
+
+		<a class="btn btn-lg btn-secondary text-white m-3" href="#"
+			th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/lugares} : ${#request.getHeader('Referer')}">Volver</a>
+	</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(${(creando ? 'Registrar' : 'Editar') + ' víctima'}, ~{::body/content()}, 'victimas')" xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<h1 class="p-3 m-0" th:text="${(creando ? 'Registrar' : 'Editar') + ' víctima'}">Registrar/editar víctima</h1>
+		<form th:object="${victima}" method="post">
+			<div class="form-group row m-3">
+				<label for="nombreCompleto" class="col-sm-2 col-form-label">Nombre completo</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="nombreCompleto" th:name="nombreCompleto" minlength="1" maxlength="128" pattern=".*\S.*" required
+						title="El nombre completo no puede contener solamente espacios en blanco y debe tener 128 caracteres o menos"
+						aria-describedby="descripcionNombreCompleto" th:value="${creando} ? '' : *{nombreCompleto}">
+				</div>
+				<small id="descripcionNombreCompleto" class="form-text text-light">Introduce el nombre y apellidos de la víctima.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="fechaNacimiento" class="col-sm-2 col-form-label">Fecha de nacimiento</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="fechaNacimiento" th:name="fechaNacimiento" type="date"
+						th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required
+						aria-describedby="descripcionFechaNacimiento" th:value="${creando} ? '' : ${#dates.format(victima.fechaNacimiento, 'yyyy-MM-dd')}">
+				</div>
+				<small id="descripcionFechaNacimiento" class="form-text text-light">Introduce la fecha de nacimiento de la víctima.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="genero" class="col-sm-2 col-form-label">Género</label>
+				<div class="col-sm-10">
+					<select class="form-select" id="genero" th:name="genero" required aria-describedby="descripcionGenero">
+						<option disabled th:selected="${creando}">&ndash;</option>
+						<option th:each="genero : ${T(com.github.aggarcia3.altercadosi.entidades.Victima.Genero).values()}"
+							th:selected="*{genero} == ${genero}" th:value="${genero}"
+							th:text="${#strings.capitalize(#strings.toLowerCase(genero))}"></option>
+					</select>
+				</div>
+				<small id="descripcionGenero" class="form-text text-light">Escoge el género de la víctima.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="raza" class="col-sm-2 col-form-label">Raza</label>
+				<div class="col-sm-10">
+					<select class="form-select" id="raza" th:name="raza" required aria-describedby="descripcionRaza">
+						<option disabled th:selected="${creando}">&ndash;</option>
+						<option th:each="raza : ${T(com.github.aggarcia3.altercadosi.entidades.Victima.Raza).values()}"
+							th:selected="*{raza} == ${raza}" th:value="${raza}"
+							th:text="${#strings.capitalize(#strings.toLowerCase(raza))}"></option>
+					</select>
+				</div>
+				<small id="descripcionRaza" class="form-text text-light">Escoge la raza de la víctima.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="altercado" class="col-sm-2 col-form-label">Altercado</label>
+				<div class="col-sm-10">
+					<select class="form-select" id="altercado" th:name="altercado" required aria-describedby="descripcionAltercado">
+						<option disabled th:selected="${creando}">&ndash;</option>
+						<optgroup label="Altercados sin víctimas">
+							<option th:each="altercado : ${altercadosSinVictimas}"
+								th:selected="*{altercado.nombre} == ${altercado.nombre}" th:text="${altercado.nombre}"></option>
+						</optgroup>
+						<optgroup label="Altercados con víctimas">
+							<option th:each="altercado : ${altercadosConVictimas}"
+								th:selected="*{altercado.nombre} == ${altercado.nombre}" th:text="${altercado.nombre}"></option>
+						</optgroup>
+					</select>
+				</div>
+				<small id="descripcionAltercado" class="form-text text-light">Escoge el altercado en el que falleció la víctima.</small>
+			</div>
+
+			<a class="btn btn-sm btn-primary m-3" href="#" th:if="${!creando}"
+				th:href="@{/altercados/__${victima.altercado.nombre}__/editar}">Editar altercado actualmente asociado</a>
+
+			<div class="form-group">
+				<ul class="lista-acciones p-0 m-0" role="presentation">
+					<li><button class="btn btn-lg btn-primary m-3" th:text="${creando} ? 'Registrar' : 'Guardar'" type="submit">Registrar/guardar</button>
+					<li><a class="btn btn-lg btn-secondary text-white m-3" href="#"
+						th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/victimas} : ${#request.getHeader('Referer')}">Volver</a>
+				</ul>
+			</div>
+		</form>
+	</body>
+</html>

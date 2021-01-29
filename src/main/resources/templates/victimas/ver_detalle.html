@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(~{::title/text()}, ~{::body/content()}, 'victimas')" xmlns:th="http://www.thymeleaf.org">
+	<title>Víctima</title>
+	<body>
+		<h1 class="p-3 m-0">Información detallada de la víctima</h1>
+
+		<p class="p-0 m-0"><strong>Nombre completo</strong>:</p>
+		<p th:text="${victima.nombreCompleto}">-</p>
+
+		<p class="p-0 m-0"><strong>Fecha de nacimiento</strong>:</p>
+		<p th:text="${#dates.format(victima.fechaNacimiento, 'EEEE, d ''de'' MMMM ''de'' yyyy')}">-</p>
+
+		<p class="p-0 m-0"><strong>Género</strong>:</p>
+		<p th:text="${#strings.capitalize(#strings.toLowerCase(victima.genero))}">-</p>
+
+		<p class="p-0 m-0"><strong>Raza</strong>:</p>
+		<p th:text="${#strings.capitalize(#strings.toLowerCase(victima.raza))}">-</p>
+
+		<h4 class="p-3 m-0">Altercado</h4>
+
+		<p class="p-0 m-0"><strong>Nombre</strong>:</p>
+		<p th:text="${victima.altercado.nombre}">-</p>
+
+		<p class="p-0 m-0"><strong>Fecha</strong>:</p>
+		<p th:text="${#dates.format(victima.altercado.fecha, 'EEEE, d ''de'' MMMM ''de'' yyyy')}">-</p>
+
+		<p class="p-0 m-0"><strong>Número de involucrados</strong>:</p>
+		<p th:text="${#lists.size(victima.altercado.numInvolucrados)}">-</p>
+
+		<p class="p-0 m-0"><strong>Número de víctimas</strong>:</p>
+		<p th:text="${#lists.size(victima.altercado.victimas)}">-</p>
+
+		<div class="form-group">
+			<a class="btn btn-sm btn-primary" role="button" th:href="@{/altercados/__${victima.altercado.nombre}__}">Ver más del altercado</a>
+		</div>
+
+		<div class="form-group">
+			<a class="btn btn-lg btn-secondary text-white m-3" href="#"
+				th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/victimas} : ${#request.getHeader('Referer')}">Volver</a>
+		</div>
+	</body>
+</html>

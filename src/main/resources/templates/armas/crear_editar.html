@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html th:replace="fragmentos/disposicion_base :: pagina(${(creando ? 'Registrar' : 'Editar') + ' arma'}, ~{::body/content()}, 'armas')" xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<h1 class="p-3 m-0" th:text="${(creando ? 'Registrar' : 'Editar') + ' arma'}">Registrar/editar arma</h1>
+		<th:block th:if="${creando}">
+			<h5>Escoge el tipo de arma a crear</h5>
+
+			<input type="radio" id="tipoArmaNoRegistrada" name="tipoArma" class="btn-check">
+			<label for="tipoArmaNoRegistrada" class="btn btn-outline-secondary m-3">No registrada</label
+			><input type="radio" id="tipoArmaRegistrada" name="tipoArma" class="btn-check"
+			><label for="tipoArmaRegistrada" class="btn btn-outline-secondary m-3">Registrada</label>
+		</th:block>
+
+		<form id="formularioArmaNoRegistrada" method="post" th:action="${creando} ? @{/armas/crear/noRegistrada} : @{/armas/__${arma.codigoPrueba}__/editar}"
+			th:object="${arma}" th:if="${creando or !(arma instanceof T(com.github.aggarcia3.altercadosi.entidades.ArmaRegistrada))}"
+			th:class="${creando} ? '' : 'formularioEdicion'">
+			<div class="form-group row m-3">
+				<label for="nombreArmaNoRegistrada" class="col-sm-2 col-form-label">Nombre</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="nombreArmaNoRegistrada" th:name="nombre" minlength="1" maxlength="128" pattern=".*\S.*" required
+					title="El nombre del arma debe de no estar compuesto exclusivamente de espacios en blanco y ocupar menos de 128 caracteres"
+					aria-describedby="descripcionNombreArmaNoRegistrada" th:value="${creando} ? '' : *{nombre}">
+				</div>
+				<small id="descripcionNombreArmaNoRegistrada" class="form-text text-light">Introduce el nombre del arma.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="costeEstimadoArmaNoRegistrada" class="col-sm-2 col-form-label">Coste estimado</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="costeEstimadoArmaNoRegistrada" th:name="costeEstimado" type="number" min="0" max="9999.99" step="0.01" required
+					title="El coste estimado del arma debe de estar entre 0 y 9.999,99 € y tener precisión de céntimos"
+					aria-describedby="descripcionCosteEstimadoArmaNoRegistrada" th:value="${creando} ? '' : *{costeEstimado}">
+				</div>
+				<small id="descripcionCosteEstimadoArmaNoRegistrada" class="form-text text-light">Introduce el coste estimado del arma.</small>
+			</div>
+
+			<th:block th:if="${!creando}">
+				<th:block th:replace="fragmentos/tabla_altercados :: componente_altercados(${arma}, 'conArma', ${arma.codigoPrueba})"></th:block>
+			</th:block>
+
+			<div class="form-group">
+				<ul class="lista-acciones p-0 m-0" role="presentation">
+					<li><button class="btn btn-lg btn-primary m-3" th:text="${creando} ? 'Registrar' : 'Guardar'" type="submit">Registrar/guardar</button>
+					<li><a class="btn btn-lg btn-secondary text-white m-3" href="#"
+						th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/armas} : ${#request.getHeader('Referer')}">Volver</a>
+				</ul>
+			</div>
+		</form>
+
+		<form id="formularioArmaRegistrada" method="post" th:action="${creando} ? @{/armas/crear/registrada} : @{/armas/__${arma.codigoPrueba}__/editar}"
+			th:object="${arma}" th:if="${creando or arma instanceof T(com.github.aggarcia3.altercadosi.entidades.ArmaRegistrada)}"
+			th:class="${creando} ? '' : 'formularioEdicion'">
+			<div class="form-group row m-3">
+				<label for="nombreArmaRegistrada" class="col-sm-2 col-form-label">Nombre</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="nombreArmaRegistrada" th:name="nombre" minlength="1" maxlength="128" pattern=".*\S.*" required
+					title="El nombre del arma debe de no estar compuesto exclusivamente de espacios en blanco y ocupar menos de 128 caracteres"
+					aria-describedby="descripcionNombreArmaRegistrada" th:value="${creando} ? '' : *{nombre}">
+				</div>
+				<small id="descripcionNombreArmaRegistrada" class="form-text text-light">Introduce el nombre del arma.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="numSerieArmaRegistrada" class="col-sm-2 col-form-label">Número de serie</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="numSerieArmaRegistrada" th:name="numSerie" type="number" min="1" max="2147483647" step="1" required
+					aria-describedby="descripcionNumSerieArmaRegistrada" th:value="${creando} ? '' : *{numSerie}">
+				</div>
+				<small id="descripcionNumSerieArmaRegistrada" class="form-text text-light">Introduce el número de serie del arma.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="numLicenciaArmaRegistrada" class="col-sm-2 col-form-label">Número de licencia</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="numLicenciaArmaRegistrada" th:name="numLicencia" type="number" min="1" max="2147483647" step="1" required
+					aria-describedby="descripcionNumLicenciaArmaRegistrada" th:value="${creando} ? '' : *{numLicencia}">
+				</div>
+				<small id="descripcionNumLicenciaArmaRegistrada" class="form-text text-light">Introduce el número de licencia del arma.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="fechaExpiracionRevistaArmaRegistrada" class="col-sm-2 col-form-label">Fecha de expiración de la revista</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="fechaExpiracionRevistaArmaRegistrada" th:name="fechaExpiracionRevista" type="date" required
+					aria-describedby="descripcionFechaExpiracionRevistaArmaRegistrada"
+					th:value="${creando} ? '' : ${#dates.format(arma.fechaExpiracionRevista, 'yyyy-MM-dd')}">
+				</div>
+				<small id="descripcionFechaExpiracionRevistaArmaRegistrada" class="form-text text-light">Introduce la fecha de expiración de la revista (revisión) obligatoria del arma.</small>
+			</div>
+
+			<div class="form-group row m-3">
+				<label for="costeEstimadoArmaRegistrada" class="col-sm-2 col-form-label">Coste estimado</label>
+				<div class="col-sm-10">
+					<input class="form-control" id="costeEstimadoArmaRegistrada" th:name="costeEstimado" type="number" min="0" max="9999.99" step="0.01" required
+					title="El coste estimado del arma debe de estar entre 0 y 9.999,99 € y tener precisión de céntimos"
+					aria-describedby="descripcionCosteEstimadoArmaRegistrada" th:value="${creando} ? '' : *{costeEstimado}">
+				</div>
+				<small id="descripcionCosteEstimadoArmaRegistrada" class="form-text text-light">Introduce el coste estimado del arma.</small>
+			</div>
+
+			<th:block th:if="${!creando}">
+				<th:block th:replace="fragmentos/tabla_altercados :: componente_altercados(${arma}, 'conArma', ${arma.codigoPrueba})"></th:block>
+			</th:block>
+
+			<th:block th:if="${!creando}">
+				<h2 class="p-3 m-0">Sucesos asociados</h2>
+				<th:block th:switch="${#lists.isEmpty(arma.sucesos)}">
+					<p th:case="${true}">No hay sucesos que mostrar.</p>
+					<table th:case="*" class="table table-dark table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="suceso : ${arma.sucesos}">
+								<td th:text="${suceso.nombre}">Nombre del suceso</td>
+								<td>
+									<ul class="lista-acciones p-0 m-0" role="presentation">
+										<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/armas/sucesos/__${suceso.id}__/editar}"><i class="fas fa-pencil-alt"></i></a>
+										<li><a class="btn btn-primary btn-sm" role="button" th:href="@{/armas/sucesos/__${suceso.id}__/eliminar}"><i class="fas fa-trash-alt"></i></a>
+									</ul>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</th:block>
+
+				<a class="btn btn-primary btn-sm m-3" role="button" th:href="@{/armas/sucesos/crear/__${arma.codigoPrueba}__}"><i class="fas fa-plus"></i></a>
+			</th:block>
+
+			<div class="form-group">
+				<ul class="lista-acciones p-0 m-0" role="presentation">
+					<li><button class="btn btn-lg btn-primary m-3" th:text="${creando} ? 'Registrar' : 'Guardar'" type="submit">Registrar/guardar</button>
+					<li><a class="btn btn-lg btn-secondary text-white m-3" href="#"
+						th:href="${#strings.isEmpty(#request.getHeader('Referer'))} ? @{/armas} : ${#request.getHeader('Referer')}">Volver</a>
+				</ul>
+			</div>
+		</form>
+	</body>
+</html>
